@@ -17,3 +17,9 @@ void	handle_error(void)
 	write(2, "error\n", 6);
 	exit(1);
 }
+
+void	print_usage(void)
+{
+	//write(1, "Usage : ./fdf <filename> [ case_size z_size ]", 34);
+	write(1, "Usage : ./fdf <filename>\n", 25);
+}

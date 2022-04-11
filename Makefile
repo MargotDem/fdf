@@ -12,7 +12,7 @@
 
 NAME =  fdf
 
-SRCS = fdf.c
+SRCS = fdf.c handle_error.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -22,8 +22,9 @@ all: $(NAME)
 
 $(NAME):
 	make -C ./libft
+	cp ./libft/libft.a ./libft.a
 	gcc $(FLAGS) -c $(SRCS)
-	gcc $(FLAGS) -o $(NAME) $(OBJS)
+	gcc $(FLAGS) -o $(NAME) $(OBJS) -L./ -lft
 
 clean:
 	make -C ./libft clean

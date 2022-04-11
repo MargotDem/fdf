@@ -17,7 +17,11 @@
 # include "minilibx/mlx.h"
 # include <stdarg.h>
 # include <stdlib.h>
+#include <fcntl.h>
 // delete
 # include <stdio.h>
+
+void	print_usage(void);
+void	handle_error(void);
 
 #endif
