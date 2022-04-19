@@ -18,8 +18,16 @@ void	handle_error(void)
 	exit(1);
 }
 
+void	*handle_null(void *param)
+{
+	if (!param)
+		handle_error();
+	return (param);
+}
+
 void	print_usage(void)
 {
 	//write(1, "Usage : ./fdf <filename> [ case_size z_size ]", 34);
 	write(1, "Usage : ./fdf <filename>\n", 25);
+	exit(1);
 }

@@ -18,13 +18,19 @@ OBJS = $(SRCS:.c=.o)
 
 FLAGS = -Wall -Werror -Wextra
 
+INCLUDES = -I/usr/local/include
+
+LIBS = -L /usr/local/lib -lmlx
+
+FRAMEWORKS = -framework OpenGL -framework Appkit
+
 all: $(NAME)
 
 $(NAME):
 	make -C ./libft
 	cp ./libft/libft.a ./libft.a
-	gcc $(FLAGS) -c $(SRCS)
-	gcc $(FLAGS) -o $(NAME) $(OBJS) -L./ -lft
+	gcc $(FLAGS) $(INCLUDES) -c $(SRCS)
+	gcc $(FLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -L./ -lft $(LIBS) $(FRAMEWORKS)
 
 clean:
 	make -C ./libft clean
@@ -35,4 +41,5 @@ fclean: clean
 
 re: fclean all
 
+# gcc -Wall -Werror -Wextra fdf.c handle_error.c -L./ -lft
 # -lmlx -lXext -lX11

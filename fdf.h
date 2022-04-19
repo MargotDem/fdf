@@ -21,7 +21,20 @@
 // delete
 # include <stdio.h>
 
+typedef struct s_mlx_win {
+	void	*mlx_ptr;
+	void	*window;
+	int		**map;
+}	t_mlx_win;
+
+typedef struct s_coords {
+	int	x;
+	int	y;
+	int	z;
+}	t_coords;
+
 void	print_usage(void);
 void	handle_error(void);
+void	*handle_null(void *param);
 
 #endif
