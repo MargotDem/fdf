@@ -24,17 +24,21 @@
 typedef struct s_coords {
 	int	x;
 	int	y;
+	int	floor;
+	int color;
 }	t_coords;
 
 typedef struct s_mlx_win {
-	void	*mlx_ptr;
-	void	*window;
-	int		**map;
-	size_t	map_width;
-	size_t	map_length;
-	size_t	window_width;
-	size_t	window_length;
+	void		*mlx_ptr;
+	void		*window;
+	int			**map;
+	size_t		map_width;
+	size_t		map_length;
+	size_t		window_width;
+	size_t		window_length;
 	t_coords	*base_point;
+	int			rotation_a;
+	size_t		highest;
 }	t_mlx_win;
 
 
