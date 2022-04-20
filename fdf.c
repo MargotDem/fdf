@@ -95,6 +95,17 @@ int		deal_key(int key, void *param)
 	return (0);
 }
 
+int		round_point(float x)
+{
+	if ((int)(x * 10) % 10 >= 5)
+	{
+		//printf("arrondissons. %f\n", x);
+		return ((int)x + 1);
+	}
+	//printf("n'arrondissons pas. %f\n", x);
+	return ((int)x);
+}
+
 void	draw_line(t_mlx_win *mlx_win, t_coords *point_a, t_coords *point_b)
 {
 	(void)point_a;
@@ -104,17 +115,115 @@ void	draw_line(t_mlx_win *mlx_win, t_coords *point_a, t_coords *point_b)
 	//mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, 100, 100, 0x08a394);
 	//mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, 150, 150, 0xffffff);
 
-	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point_a->x, point_a->y, 0x08a394);
+	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point_a->x, point_a->y, 0xf22233);
 	x = point_a->x;
 	y = point_a->y;
 	while (x < point_b->x)
 	{
-		y = ((point_b->y - point_a->y) / (point_b->x - point_a->x)) * (x - point_a->x) + point_a->y + 0.5;
-		printf("y is %d, ", y);
+		y = round_point(((float)(point_b->y - point_a->y) / (float)(point_b->x - point_a->x)) * (x - point_a->x) + point_a->y + 0.5);
+		//printf("test %d\n", (int)((float)(point_b->y - point_a->y) / (float)(point_b->x - point_a->x)));
+		///printf("test is %d, ", (point_b->y - point_a->y));
+		//printf("and here is %d, ", (point_b->x - point_a->x));
 		mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, 0xa37208);
 		x++;
 	}
-	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point_b->x, point_b->y, 0xffffff);
+	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point_b->x, point_b->y, 0xf22233);
+	
+}
+
+void	get_window_dimensions(size_t *dimensions , size_t width, size_t length)
+{
+	(void)width;
+	(void)length;
+	(dimensions)[0] = 600;
+	(dimensions)[1] = 600;
+}
+
+void	*open_window(void *mlx_ptr, size_t *dimensions, char *file)
+{
+	void	*window;
+
+	window = handle_null(mlx_new_window(mlx_ptr, dimensions[0], dimensions[1], file));
+	return (window);
+}
+
+void	get_base_point(t_mlx_win *mlx_win)
+{
+	t_coords	*base_point;
+
+	base_point = (t_coords *)malloc(sizeof(t_coords));
+	if (!base_point)
+		handle_error();
+	base_point->x = 50;
+	base_point->y = 400;
+	mlx_win->base_point = base_point;
+}
+
+void	draw_point(t_mlx_win *mlx_win, size_t j, size_t i)
+{
+	size_t x;
+	size_t y;
+	size_t x_left;
+	size_t y_left;
+	size_t x_down;
+	size_t y_down;
+	size_t base_x;
+	size_t base_y;
+	t_coords	*point_a;
+	t_coords	*point_b;
+
+	(void)j;
+	printf("here %zu\n", i);
+	base_x = mlx_win->base_point->x;
+	base_y = mlx_win->base_point->y;
+	x = (base_x + (25 * i)) + (20 * j);
+	y = base_y - (15 * i) + (15 * j) - (mlx_win->map[j][i] * 20);
+
+
+	
+	point_a = (t_coords *)malloc(sizeof(t_coords));
+	if (!point_a)
+		handle_error();
+	point_b = (t_coords *)malloc(sizeof(t_coords));
+	if (!point_b)
+		handle_error();
+	point_a->x = x;
+	point_a->y = y;
+	if (i != mlx_win->map_width - 1)
+	{
+		x_left = (base_x + (25 * (i + 1))) + (20 * j);
+		y_left = base_y - (15 * (i + 1)) + (15 * j) - (mlx_win->map[j][i + 1] * 20);
+		point_b->x = x_left;
+		point_b->y = y_left;
+		draw_line(mlx_win, point_a, point_b);
+	}
+	if (j != mlx_win->map_length - 1)
+	{
+		x_down = (base_x + (25 * i)) + (20 * (j + 1));
+		y_down = base_y - (15 * i) + (15 * (j + 1)) - (mlx_win->map[j + 1][i] * 20);
+		point_b->x = x_down;
+		point_b->y = y_down;
+		draw_line(mlx_win, point_a, point_b);
+	}
+}
+
+void	draw_points(t_mlx_win *mlx_win)
+{
+	size_t		x;
+	size_t		y;
+
+	get_base_point(mlx_win);
+	y = 0;
+	while (y < mlx_win->map_length)
+	{
+		x = 0;
+		while (x < mlx_win->map_width)
+		{
+			draw_point(mlx_win, y, x);
+			x++;
+		}
+		y++;
+	}
 }
 
 void	open_mlx(int **map, size_t width, size_t length, char *file)
@@ -122,38 +231,26 @@ void	open_mlx(int **map, size_t width, size_t length, char *file)
 	void	*mlx_ptr;
 	void	*window;
 	t_mlx_win *mlx_win;
-	t_coords	*point_a;
-	t_coords	*point_b;
-
-	(void)mlx_ptr;
-	(void)window;
-	(void)map;
-	(void)width;
-	(void)length;
-	printf("width is %zu and lenth is %zu\n", width, length);
+	size_t	dimensions[2];
 
 	mlx_ptr = handle_null(mlx_init());
-	window = handle_null(mlx_new_window(mlx_ptr, 500, 500, file));
 	mlx_win = (t_mlx_win *)malloc(sizeof(t_mlx_win));
 	if (!mlx_win)
 		handle_error();
+	get_window_dimensions(dimensions, width, length);
+	window = open_window(mlx_ptr, dimensions, file);
 	mlx_win->mlx_ptr = mlx_ptr;
 	mlx_win->window = window;
 	mlx_win->map = map;
+	mlx_win->map_width = width;
+	mlx_win->map_length = length;
+	mlx_win->window_width = dimensions[0];
+	mlx_win->window_length = dimensions[1];
 
-	point_a = (t_coords *)malloc(sizeof(t_coords));
-	if (!point_a)
-		handle_error();
-	point_b = (t_coords *)malloc(sizeof(t_coords));
-	if (!point_b)
-		handle_error();
-	point_a->x = 100;
-	point_a->y = 100;
-	point_a->z = 0;
-	point_b->x = 150;
-	point_b->y = 110;
-	point_b->z = 0;
-	draw_line(mlx_win, point_a, point_b);
+	//mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, 300, 300, 0xfadcf5);
+	//mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, 350, 270, 0xfadcf5);
+
+	draw_points(mlx_win);
 	mlx_key_hook(window, deal_key, (void *)mlx_win);
 	mlx_loop(mlx_ptr);
 }
@@ -217,17 +314,6 @@ int	main(int argc, char **argv)
 }
 
 /*
-
-okayyeee alors.
-comment storer les infos de la map??
-(ah et why d3 ça marche qd mm ffs)
-
-on sait pas avant de parser tout le file le nb de lignes, right?
-et on sait pas au debut le nb de colonnes
-donc l'array d'array d'ints ça marche pas
-enfin on peut go first once, ensuite malloc, et re
-mais c moche
-
 
 
 */
