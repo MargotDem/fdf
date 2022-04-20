@@ -108,24 +108,41 @@ int		round_point(float x)
 
 void	draw_line(t_mlx_win *mlx_win, t_coords *point_a, t_coords *point_b)
 {
-	(void)point_a;
-	(void)point_b;
 	int	x;
 	int	y;
-	//mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, 100, 100, 0x08a394);
-	//mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, 150, 150, 0xffffff);
 
 	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point_a->x, point_a->y, 0xf22233);
 	x = point_a->x;
 	y = point_a->y;
-	while (x < point_b->x)
+	if (point_b->x - point_a->x >= ft_abs(point_b->y - point_a->y))
 	{
-		y = round_point(((float)(point_b->y - point_a->y) / (float)(point_b->x - point_a->x)) * (x - point_a->x) + point_a->y + 0.5);
-		//printf("test %d\n", (int)((float)(point_b->y - point_a->y) / (float)(point_b->x - point_a->x)));
-		///printf("test is %d, ", (point_b->y - point_a->y));
-		//printf("and here is %d, ", (point_b->x - point_a->x));
-		mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, 0xa37208);
-		x++;
+		while (x < point_b->x)
+		{
+			y = round_point(((float)(point_b->y - point_a->y) / (float)(point_b->x - point_a->x)) * (x - point_a->x) + point_a->y + 0.5);
+			mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, 0xa37208);
+			x++;
+		}
+	}
+	else
+	{
+		if (point_b-> y > point_a->y)
+		{
+			while (y < point_b->y)
+			{
+				x = round_point(point_a->x + (y - 0.5 - point_a->y) * (  (float)(point_b->x - point_a->x) / (float)(point_b->y - point_a->y)    ));
+				mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, 0xa37208);
+				y++;
+			}
+		}
+		else
+		{
+			while (y > point_b->y)
+			{
+				x = round_point(point_a->x + (y - 0.5 - point_a->y) * (  (float)(point_b->x - point_a->x) / (float)(point_b->y - point_a->y)    ));
+				mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, 0xa37208);
+				y--;
+			}
+		}
 	}
 	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point_b->x, point_b->y, 0xf22233);
 	
@@ -159,28 +176,36 @@ void	get_base_point(t_mlx_win *mlx_win)
 	mlx_win->base_point = base_point;
 }
 
+size_t	get_x(size_t base_x, size_t i, size_t j)
+{
+	size_t	x;
+
+	x = (base_x + (25 * i)) + (20 * j);
+	return (x);
+}
+
+
+size_t	get_y(size_t base_y, t_mlx_win *mlx_win, size_t i, size_t j)
+{
+	size_t	y;
+
+	y = base_y - (15 * i) + (15 * j) - (mlx_win->map[j][i] * 20);
+	return (y);
+}
+
 void	draw_point(t_mlx_win *mlx_win, size_t j, size_t i)
 {
 	size_t x;
 	size_t y;
-	size_t x_left;
-	size_t y_left;
-	size_t x_down;
-	size_t y_down;
 	size_t base_x;
 	size_t base_y;
 	t_coords	*point_a;
 	t_coords	*point_b;
 
-	(void)j;
-	printf("here %zu\n", i);
 	base_x = mlx_win->base_point->x;
 	base_y = mlx_win->base_point->y;
-	x = (base_x + (25 * i)) + (20 * j);
-	y = base_y - (15 * i) + (15 * j) - (mlx_win->map[j][i] * 20);
-
-
-	
+	x = get_x(base_x, i, j);
+	y = get_y(base_y, mlx_win, i, j);
 	point_a = (t_coords *)malloc(sizeof(t_coords));
 	if (!point_a)
 		handle_error();
@@ -191,18 +216,14 @@ void	draw_point(t_mlx_win *mlx_win, size_t j, size_t i)
 	point_a->y = y;
 	if (i != mlx_win->map_width - 1)
 	{
-		x_left = (base_x + (25 * (i + 1))) + (20 * j);
-		y_left = base_y - (15 * (i + 1)) + (15 * j) - (mlx_win->map[j][i + 1] * 20);
-		point_b->x = x_left;
-		point_b->y = y_left;
+		point_b->x = get_x(base_x, i + 1, j);
+		point_b->y = get_y(base_y, mlx_win, i + 1, j);
 		draw_line(mlx_win, point_a, point_b);
 	}
 	if (j != mlx_win->map_length - 1)
 	{
-		x_down = (base_x + (25 * i)) + (20 * (j + 1));
-		y_down = base_y - (15 * i) + (15 * (j + 1)) - (mlx_win->map[j + 1][i] * 20);
-		point_b->x = x_down;
-		point_b->y = y_down;
+		point_b->x = get_x(base_x, i, j + 1);
+		point_b->y = get_y(base_y, mlx_win, i, j + 1);
 		draw_line(mlx_win, point_a, point_b);
 	}
 }
