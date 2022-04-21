@@ -26,18 +26,27 @@ void	set_base_point(t_mlx_win *mlx_win)
 
 void	set_offsets(t_mlx_win *mlx_win)
 {
+	size_t	length;
 
+	length = (int)sqrt((((double)mlx_win->segment * (double)mlx_win->segment) / 2));
 	if (mlx_win->projection == 0)
 	{
-		mlx_win->z_offset = 15; // 20?
-		mlx_win->x_offset = 25; // 25?
-		mlx_win->y_offset = 15; // 15?
+		mlx_win->z_offset = mlx_win->segment; // 20?
+		//mlx_win->x_offset = 25; // 25?
+		//mlx_win->y_offset = 15; // 15?
+		mlx_win->x_offset = length + length / 4;
+		mlx_win->y_offset = length - length / 4;
+		mlx_win->x_y_offset = mlx_win->x_offset;
+		mlx_win->y_x_offset = mlx_win->y_offset;
 	}
 	else if (mlx_win->projection == 1)
 	{
-		mlx_win->z_offset = 15; // 20?
-		mlx_win->x_offset = 20; // 25?
-		mlx_win->y_offset = 20; // 15?
+		mlx_win->z_offset = mlx_win->segment; // 20?
+		//mlx_win->x_offset = 20; // 25?
+		mlx_win->x_offset = length;
+		mlx_win->y_offset = mlx_win->x_offset; // 15?
+		mlx_win->x_y_offset = mlx_win->x_offset;
+		mlx_win->y_x_offset = mlx_win->y_offset;
 	}
 }
 
@@ -45,7 +54,7 @@ size_t	get_x(t_mlx_win *mlx_win, size_t i, size_t j)
 {
 	size_t	x;
 
-	x = (mlx_win->base_point->x + (mlx_win->x_offset * i)) + (mlx_win->x_offset * j);
+	x = (mlx_win->base_point->x + (mlx_win->x_offset * i)) + (mlx_win->x_y_offset * j);
 	return (x);
 }
 
@@ -54,7 +63,7 @@ size_t	get_y_floor(t_mlx_win *mlx_win, size_t i, size_t j)
 	size_t	y;
 
 	// (mlx_win->y_offset * i) actually another offset. == yoffset if symmetric losange ie if xoffset == yoffset
-	y = mlx_win->base_point->y - (mlx_win->y_offset * i) + (mlx_win->y_offset * j);
+	y = mlx_win->base_point->y - (mlx_win->y_offset * i) + (mlx_win->y_x_offset * j);
 	return (y);
 }
 
