@@ -15,7 +15,7 @@
 t_mlx_win	*create_mlx_win_struct(int **map, size_t width, size_t length, \
 	size_t highest)
 {
-	t_mlx_win 	*mlx_win;
+	t_mlx_win	*mlx_win;
 
 	mlx_win = (t_mlx_win *)malloc(sizeof(t_mlx_win));
 	if (!mlx_win)

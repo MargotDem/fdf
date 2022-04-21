@@ -12,6 +12,19 @@
 
 #include "fdf.h"
 
+void	free_map(int **map, size_t size)
+{
+	size_t		j;
+
+	j = 0;
+	while (j < size)
+	{
+		free(map[j]);
+		j++;
+	}
+	free(map);
+}
+
 void	malloc_map(int ***map, size_t size_x, size_t size_y)
 {
 	size_t		i;
@@ -27,13 +40,7 @@ void	malloc_map(int ***map, size_t size_x, size_t size_y)
 		(*map)[i] = (int *)malloc(sizeof(int) * size_x);
 		if (!((*map)[i]))
 		{
-			j = 0;
-			while (j < i - 1)
-			{
-				free((*map)[j]);
-				j++;
-			}
-			free(*map);
+			free_map(*map, i - 1);
 			handle_error();
 		}
 		i++;
@@ -98,7 +105,6 @@ void	test(void)
 	//printf("color is %x\n", color | (0x45 << 16));
 }
 
-
 void	parse_map(char *file)
 {
 	int			ret;
@@ -111,7 +117,7 @@ void	parse_map(char *file)
 	char		**data_ar;
 	int			**map;
 	size_t		highest;
-	t_mlx_win 	*mlx_win;
+	t_mlx_win	*mlx_win;
 
 	test();
 	map_width = 0;
@@ -125,6 +131,7 @@ void	parse_map(char *file)
 	data_ar = ft_strsplit(line, ' ');
 	while (data_ar[map_width])
 		map_width++;
+	//free(data_ar);
 	malloc_map(&map, map_width, map_len);
 	while (ret)
 	{
@@ -141,11 +148,13 @@ void	parse_map(char *file)
 			handle_error();
 		ret = get_next_line(fd, &line);
 		j++;
+		//free(data_ar);
 	}
 	close(fd);
 	//print_map(map, map_width, map_len);
 	mlx_win = create_mlx_win_struct(map, map_width, map_len, highest);
 	open_mlx(mlx_win, file);
-	//ft_memdel(&map);
-	free(map);
+	free_map(map, map_len);
+	free(mlx_win->base_point);
+	free(mlx_win);
 }

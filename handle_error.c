@@ -27,7 +27,6 @@ void	*handle_null(void *param)
 
 void	print_usage(void)
 {
-	//write(1, "Usage : ./fdf <filename> [ case_size z_size ]", 34);
 	write(1, "Usage : ./fdf <filename>\n", 25);
 	exit(1);
 }

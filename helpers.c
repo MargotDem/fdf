@@ -10,13 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "fdf.h"
+
 int		round_point(float x)
 {
 	if ((int)(x * 10) % 10 >= 5)
-	{
-		//printf("arrondissons. %f\n", x);
 		return ((int)x + 1);
-	}
-	//printf("n'arrondissons pas. %f\n", x);
 	return ((int)x);
+}
+
+void	print_pixel(t_mlx_win *mlx_win, t_coords *point_a)
+{
+	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point_a->x, point_a->y, \
+		point_a->color);
 }

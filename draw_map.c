@@ -86,6 +86,8 @@ void	make_line(t_mlx_win *mlx_win, size_t j, size_t i)
 		point_b->floor = get_y_floor(mlx_win, i, j + 1);
 		draw_line(mlx_win, point_a, point_b);
 	}
+	free(point_a);
+	free(point_b);
 }
 
 void	draw_map(t_mlx_win *mlx_win)

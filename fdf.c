@@ -17,10 +17,6 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 		print_usage();
 	parse_map(argv[1]);
+	system("leaks fdf");
 	return (0);
 }
-
-/*
-
-
-*/

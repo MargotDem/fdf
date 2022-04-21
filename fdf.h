@@ -17,7 +17,7 @@
 # include "minilibx/mlx.h"
 # include <stdarg.h>
 # include <stdlib.h>
-#include <fcntl.h>
+# include <fcntl.h>
 // delete
 # include <stdio.h>
 
@@ -25,7 +25,7 @@ typedef struct s_coords {
 	int	x;
 	int	y;
 	int	floor;
-	int color;
+	int	color;
 }	t_coords;
 
 typedef struct s_mlx_win {
@@ -41,7 +41,6 @@ typedef struct s_mlx_win {
 	size_t		highest;
 }	t_mlx_win;
 
-
 void		print_usage(void);
 void		handle_error(void);
 void		*handle_null(void *param);
@@ -54,5 +53,6 @@ void		draw_map(t_mlx_win *mlx_win);
 void		draw_line(t_mlx_win *mlx_win, t_coords *point_a, \
 	t_coords *point_b);
 int			round_point(float x);
+void		print_pixel(t_mlx_win *mlx_win, t_coords *point_a);
 
 #endif
