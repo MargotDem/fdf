@@ -27,6 +27,7 @@ void		pick_color_point(size_t highest, t_coords *point)
 		color = (color & 0xff0000) | gb_value | gb_value << 8;
 	}
 	point->color = color;
+	//point->color = 0xff0000;
 }
 
 int		pick_color_gradient(int y, t_coords *point_a, t_coords *point_b)
@@ -57,8 +58,8 @@ void	draw_line(t_mlx_win *mlx_win, t_coords *point_a, t_coords *point_b)
 	int	y;
 	int	color;
 
-	pick_color_point(mlx_win->highest, point_a);
-	pick_color_point(mlx_win->highest, point_b);
+	pick_color_point(mlx_win->highest * mlx_win->z_offset, point_a);
+	pick_color_point(mlx_win->highest * mlx_win->z_offset, point_b);
 	print_pixel(mlx_win, point_a);
 	x = point_a->x;
 	y = point_a->y;

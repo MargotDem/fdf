@@ -12,12 +12,15 @@
 
 #include "fdf.h"
 
-void	get_window_dimensions(size_t *dimensions , size_t width, size_t length)
+void	get_window_dimensions(size_t *dimensions, t_mlx_win *mlx_win)
 {
-	(void)width;
-	(void)length;
-	(dimensions)[0] = 600;
-	(dimensions)[1] = 600;
+	size_t	map_width;
+	size_t	map_length;
+
+	map_width = mlx_win->map_width;
+	map_length = mlx_win->map_length;
+	(dimensions)[0] = 900;
+	(dimensions)[1] = 900;
 }
 
 void	open_mlx(t_mlx_win *mlx_win, char *file)
@@ -28,8 +31,9 @@ void	open_mlx(t_mlx_win *mlx_win, char *file)
 
 	mlx_ptr = handle_null(mlx_init());
 
-	get_window_dimensions(dimensions, mlx_win->map_width, mlx_win->map_length);
-	window = handle_null(mlx_new_window(mlx_ptr, dimensions[0], dimensions[1], file));
+	get_window_dimensions(dimensions, mlx_win);
+	window = handle_null(mlx_new_window(mlx_ptr, dimensions[0], \
+		dimensions[1], file));
 	mlx_win->mlx_ptr = mlx_ptr;
 	mlx_win->window = window;
 	mlx_win->window_width = dimensions[0];

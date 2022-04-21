@@ -23,8 +23,23 @@ int		handle_key(int key, void *param)
 		mlx_destroy_window(mlx_win->mlx_ptr, mlx_win->window);
 		exit(0);
 	}
-	if (key == 123)
+	if (key == 123) // <
 	{
+		//printf("key is %d\n", key);
+	}
+	if (key == 35) // p
+	{
+		printf("heyyy\n");
+		erase_map(mlx_win);
+		if (mlx_win->projection == 0)
+		{
+			mlx_win->projection = 1;
+		}
+		else if (mlx_win->projection == 1)
+		{
+			mlx_win->projection = 0;
+		}
+		draw_map(mlx_win);
 		//printf("key is %d\n", key);
 	}
 	return (0);

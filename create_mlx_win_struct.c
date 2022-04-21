@@ -23,7 +23,8 @@ t_mlx_win	*create_mlx_win_struct(int **map, size_t width, size_t length, \
 	mlx_win->map = map;
 	mlx_win->map_width = width;
 	mlx_win->map_length = length;
-	mlx_win->highest = highest * 20; // 20?
 	mlx_win->rotation_a = 20;
+	mlx_win->projection = 0;
+	mlx_win->highest = highest;
 	return (mlx_win);
 }

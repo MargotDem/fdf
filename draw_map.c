@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-void	get_base_point(t_mlx_win *mlx_win)
+void	set_base_point(t_mlx_win *mlx_win)
 {
 	t_coords	*base_point;
 
@@ -20,15 +20,34 @@ void	get_base_point(t_mlx_win *mlx_win)
 	if (!base_point)
 		handle_error();
 	base_point->x = 50;
-	base_point->y = 400;
+	base_point->y = 700;
 	mlx_win->base_point = base_point;
+}
+
+void	set_offsets(t_mlx_win *mlx_win)
+{
+
+	if (mlx_win->projection == 0)
+	{
+		// z_offset of 10 and 20 work but not 15 what is the name of jesus christ is going on (only for tests 3 and 4 tho)
+		mlx_win->z_offset = 20; // 20?
+		mlx_win->x_offset = 25; // 25?
+		mlx_win->y_offset = 15; // 15?
+	}
+	else if (mlx_win->projection == 1)
+	{
+		// z_offset of 10 and 20 work but not 15 what is the name of jesus christ is going on (only for tests 3 and 4 tho)
+		mlx_win->z_offset = 20; // 20?
+		mlx_win->x_offset = 20; // 25?
+		mlx_win->y_offset = 20; // 15?
+	}
 }
 
 size_t	get_x(t_mlx_win *mlx_win, size_t i, size_t j)
 {
 	size_t	x;
 
-	x = (mlx_win->base_point->x + (25 * i)) + (mlx_win->rotation_a * j);
+	x = (mlx_win->base_point->x + (mlx_win->x_offset * i)) + (mlx_win->x_offset * j);
 	return (x);
 }
 
@@ -36,7 +55,8 @@ size_t	get_y_floor(t_mlx_win *mlx_win, size_t i, size_t j)
 {
 	size_t	y;
 
-	y = mlx_win->base_point->y - (15 * i) + (15 * j);
+	// (mlx_win->y_offset * i) actually another offset. == yoffset if symmetric losange ie if xoffset == yoffset
+	y = mlx_win->base_point->y - (mlx_win->y_offset * i) + (mlx_win->y_offset * j);
 	return (y);
 }
 
@@ -45,8 +65,7 @@ size_t	get_y(t_mlx_win *mlx_win, size_t i, size_t j)
 {
 	size_t	y;
 
-	//y = mlx_win->base_point->y - (15 * i) + (15 * j) - (mlx_win->map[j][i] * 20);
-	y = get_y_floor(mlx_win, i, j) - (mlx_win->map[j][i] * 20);
+	y = get_y_floor(mlx_win, i, j) - (mlx_win->map[j][i] * mlx_win->z_offset);
 	return (y);
 }
 
@@ -90,12 +109,57 @@ void	make_line(t_mlx_win *mlx_win, size_t j, size_t i)
 	free(point_b);
 }
 
+
+void	draw_grid(t_mlx_win *mlx_win)
+{
+	int i;
+	int j;
+	int color;
+	color = 0xe0e0e0;
+
+	i = 0;
+	while (i < 600)
+	{
+		j = 0;
+		while (j < 600)
+		{
+			if ((i % 20 == 0) || (j % 20 == 0))
+				mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, i, j, color);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	erase_map(t_mlx_win *mlx_win)
+{
+	int i;
+	int j;
+	int color;
+	color = 0x000000;
+
+	i = 0;
+	while (i < 900)
+	{
+		j = 0;
+		while (j < 900)
+		{
+			mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, i, j, color);
+			j++;
+		}
+		i++;
+	}
+}
+
 void	draw_map(t_mlx_win *mlx_win)
 {
 	size_t		x;
 	size_t		y;
 
-	get_base_point(mlx_win);
+	set_offsets(mlx_win);
+	set_base_point(mlx_win);
+	//draw_grid(mlx_win);
+	printf("hello\n");
 	y = 0;
 	while (y < mlx_win->map_length)
 	{
