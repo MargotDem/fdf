@@ -119,7 +119,6 @@ void	parse_map(char *file)
 	size_t		highest;
 	t_mlx_win	*mlx_win;
 
-	test();
 	map_width = 0;
 	map_len = get_map_size_y(file);
 	fd = open(file, O_RDONLY);

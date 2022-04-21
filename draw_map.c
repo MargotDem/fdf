@@ -29,15 +29,13 @@ void	set_offsets(t_mlx_win *mlx_win)
 
 	if (mlx_win->projection == 0)
 	{
-		// z_offset of 10 and 20 work but not 15 what is the name of jesus christ is going on (only for tests 3 and 4 tho)
-		mlx_win->z_offset = 20; // 20?
+		mlx_win->z_offset = 15; // 20?
 		mlx_win->x_offset = 25; // 25?
 		mlx_win->y_offset = 15; // 15?
 	}
 	else if (mlx_win->projection == 1)
 	{
-		// z_offset of 10 and 20 work but not 15 what is the name of jesus christ is going on (only for tests 3 and 4 tho)
-		mlx_win->z_offset = 20; // 20?
+		mlx_win->z_offset = 15; // 20?
 		mlx_win->x_offset = 20; // 25?
 		mlx_win->y_offset = 20; // 15?
 	}
@@ -107,6 +105,7 @@ void	make_line(t_mlx_win *mlx_win, size_t j, size_t i)
 	}
 	free(point_a);
 	free(point_b);
+
 }
 
 
@@ -159,7 +158,6 @@ void	draw_map(t_mlx_win *mlx_win)
 	set_offsets(mlx_win);
 	set_base_point(mlx_win);
 	//draw_grid(mlx_win);
-	printf("hello\n");
 	y = 0;
 	while (y < mlx_win->map_length)
 	{

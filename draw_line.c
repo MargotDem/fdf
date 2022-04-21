@@ -42,7 +42,9 @@ int		pick_color_gradient(int y, t_coords *point_a, t_coords *point_b)
 	gb_value_a = point_a->color & 0xff;
 	diff_y = ft_abs(point_a->y - point_b->y);
 	diff_color = point_a->color & 0xff - point_b->color & 0xff;
-	gb_value = (ft_abs(point_a->y - y) * ft_abs(diff_color) / diff_y);
+	gb_value = 0;
+	if (diff_y != 0)
+		gb_value = (ft_abs(point_a->y - y) * ft_abs(diff_color) / diff_y);
 	if (diff_color > 0)
 		color = (color & 0xff0000) | gb_value_a - gb_value | \
 			((gb_value_a - gb_value) << 8);

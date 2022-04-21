@@ -29,7 +29,6 @@ int		handle_key(int key, void *param)
 	}
 	if (key == 35) // p
 	{
-		printf("heyyy\n");
 		erase_map(mlx_win);
 		if (mlx_win->projection == 0)
 		{
