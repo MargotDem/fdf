@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.c                                              :+:      :+:    :+:   */
+/*   create_mlx_win.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mde-maul <mde-maul@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/10 18:06:52 by mde-maul          #+#    #+#             */
-/*   Updated: 2022/04/10 18:06:55 by mde-maul         ###   ########.fr       */
+/*   Created: 2022/04/21 14:34:36 by mde-maul          #+#    #+#             */
+/*   Updated: 2022/04/21 14:34:44 by mde-maul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	main(int argc, char **argv)
+t_mlx_win	*create_mlx_win_struct(int **map, size_t width, size_t length, \
+	size_t highest)
 {
-	if (argc != 2)
-		print_usage();
-	parse_map(argv[1]);
-	return (0);
+	t_mlx_win 	*mlx_win;
+
+	mlx_win = (t_mlx_win *)malloc(sizeof(t_mlx_win));
+	if (!mlx_win)
+		handle_error();
+	mlx_win->map = map;
+	mlx_win->map_width = width;
+	mlx_win->map_length = length;
+	mlx_win->highest = highest * 20; // 20?
+	mlx_win->rotation_a = 20;
+	return (mlx_win);
 }
-
-/*
-
-
-*/

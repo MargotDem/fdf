@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.c                                              :+:      :+:    :+:   */
+/*   helpers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mde-maul <mde-maul@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/10 18:06:52 by mde-maul          #+#    #+#             */
-/*   Updated: 2022/04/10 18:06:55 by mde-maul         ###   ########.fr       */
+/*   Created: 2022/04/21 14:54:34 by mde-maul          #+#    #+#             */
+/*   Updated: 2022/04/21 14:54:36 by mde-maul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
-
-int	main(int argc, char **argv)
+int		round_point(float x)
 {
-	if (argc != 2)
-		print_usage();
-	parse_map(argv[1]);
-	return (0);
+	if ((int)(x * 10) % 10 >= 5)
+	{
+		//printf("arrondissons. %f\n", x);
+		return ((int)x + 1);
+	}
+	//printf("n'arrondissons pas. %f\n", x);
+	return ((int)x);
 }
-
-/*
-
-
-*/

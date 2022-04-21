@@ -42,8 +42,17 @@ typedef struct s_mlx_win {
 }	t_mlx_win;
 
 
-void	print_usage(void);
-void	handle_error(void);
-void	*handle_null(void *param);
+void		print_usage(void);
+void		handle_error(void);
+void		*handle_null(void *param);
+void		parse_map(char *file);
+t_mlx_win	*create_mlx_win_struct(int **map, size_t width, \
+	size_t length, size_t highest);
+void		open_mlx(t_mlx_win *mlx_win, char *file);
+int			handle_key(int key, void *param);
+void		draw_map(t_mlx_win *mlx_win);
+void		draw_line(t_mlx_win *mlx_win, t_coords *point_a, \
+	t_coords *point_b);
+int			round_point(float x);
 
 #endif

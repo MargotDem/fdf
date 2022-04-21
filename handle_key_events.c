@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.c                                              :+:      :+:    :+:   */
+/*   handle_key_events.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mde-maul <mde-maul@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/10 18:06:52 by mde-maul          #+#    #+#             */
-/*   Updated: 2022/04/10 18:06:55 by mde-maul         ###   ########.fr       */
+/*   Created: 2022/04/21 14:39:23 by mde-maul          #+#    #+#             */
+/*   Updated: 2022/04/21 14:39:24 by mde-maul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	main(int argc, char **argv)
+int		handle_key(int key, void *param)
 {
-	if (argc != 2)
-		print_usage();
-	parse_map(argv[1]);
+	t_mlx_win *mlx_win;
+
+	mlx_win = (t_mlx_win *)param;
+	printf("key is %d\n", key);
+	if (key == 53)
+	{
+		mlx_destroy_window(mlx_win->mlx_ptr, mlx_win->window);
+		exit(0);
+	}
+	if (key == 123)
+	{
+		//printf("key is %d\n", key);
+	}
 	return (0);
 }
-
-/*
-
-
-*/

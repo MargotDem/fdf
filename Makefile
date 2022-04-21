@@ -12,7 +12,8 @@
 
 NAME =  fdf
 
-SRCS = fdf.c handle_error.c
+SRCS = fdf.c handle_error.c parse_map.c create_mlx_win_struct.c open_mlx.c \
+	handle_key_events.c draw_map.c draw_line.c helpers.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -40,6 +41,3 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-# gcc -Wall -Werror -Wextra fdf.c handle_error.c -L./ -lft
-# -lmlx -lXext -lX11
