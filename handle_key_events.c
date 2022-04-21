@@ -64,5 +64,47 @@ int		handle_key(int key, void *param)
 		draw_map(mlx_win);
 		//printf("key is %d\n", key);
 	}
+	if (key == 3)//f
+	{
+		size_t	tmp;
+		size_t	i;
+		size_t	j;
+
+		erase_map(mlx_win);
+		j = 0;
+		while (j < mlx_win->map_length)
+		{
+			i = 0;
+			while (i < mlx_win->map_width / 2)
+			{
+				tmp = mlx_win->map[j][i];
+				mlx_win->map[j][i] = mlx_win->map[j][mlx_win->map_width - i - 1];
+				mlx_win->map[j][mlx_win->map_width - i - 1] = tmp;
+				i++;
+			}
+			j++;
+		}
+		draw_map(mlx_win);
+	}
+	if (key == 5)//g
+	{
+		int	*tmp;
+		size_t	j;
+
+		erase_map(mlx_win);
+		j = 0;
+		while (j < mlx_win->map_length / 2)
+		{
+			tmp = mlx_win->map[j];
+			mlx_win->map[j] = mlx_win->map[mlx_win->map_length - j - 1];
+			mlx_win->map[mlx_win->map_length - j - 1] = tmp;
+			j++;
+		}
+		draw_map(mlx_win);
+	}
+	if (key == 4)//h
+	{
+		
+	}
 	return (0);
 }
