@@ -47,7 +47,7 @@ typedef struct s_mlx_win {
 	size_t		y_x_offset;
 	size_t		projection;
 
-	int			segment;
+	size_t		segment;
 	t_coords	*point_a;
 	t_coords	*point_b;
 	t_coords	*point_c;
@@ -72,5 +72,6 @@ void		draw_line(t_mlx_win *mlx_win, t_coords *point_a, \
 int			round_point(float x);
 void		print_pixel(t_mlx_win *mlx_win, t_coords *point_a);
 void		erase_map(t_mlx_win *mlx_win);
+void		set_offsets(t_mlx_win *mlx_win);
 
 #endif

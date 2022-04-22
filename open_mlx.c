@@ -12,16 +12,92 @@
 
 #include "fdf.h"
 
-void	get_window_dimensions(size_t *dimensions, t_mlx_win *mlx_win)
+
+void	set_offsets(t_mlx_win *mlx_win)
+{
+	size_t	length;
+
+	length = (int)sqrt((((double)mlx_win->segment * (double)mlx_win->segment) / 2));
+	if (mlx_win->projection == 0)
+	{
+		mlx_win->z_offset = mlx_win->segment; // 20?
+		//mlx_win->x_offset = 25; // 25?
+		//mlx_win->y_offset = 15; // 15?
+		mlx_win->x_offset = length + length / 4;
+		mlx_win->y_offset = length - length / 4;
+		mlx_win->x_y_offset = mlx_win->x_offset;
+		mlx_win->y_x_offset = mlx_win->y_offset;
+	}
+	else if (mlx_win->projection == 1)
+	{
+		mlx_win->z_offset = mlx_win->segment; // 20?
+		//mlx_win->x_offset = 20; // 25?
+		mlx_win->x_offset = length;
+		mlx_win->y_offset = mlx_win->x_offset; // 15?
+		mlx_win->x_y_offset = mlx_win->x_offset;
+		mlx_win->y_x_offset = mlx_win->y_offset;
+	}
+}
+
+void	set_base_point(t_mlx_win *mlx_win, size_t offset)
+{
+	t_coords	*base_point;
+	
+	base_point = (t_coords *)malloc(sizeof(t_coords));
+	if (!base_point)
+		handle_error();
+	base_point->x = 0 + (offset * mlx_win->map_width + offset * mlx_win->map_length) * 0.15;
+	base_point->y = mlx_win->window_length - (mlx_win->map_length * offset) - \
+		(offset * mlx_win->map_length + offset * mlx_win->map_width + mlx_win->highest * mlx_win->segment) * 0.1;
+	mlx_win->base_point = base_point;
+}
+
+void	set_window_dimensions(t_mlx_win *mlx_win, size_t offset)
 {
 	size_t	map_width;
 	size_t	map_length;
+	size_t	window_width;
+	size_t	window_length;
 
 	map_width = mlx_win->map_width;
 	map_length = mlx_win->map_length;
-	(dimensions)[0] = 900;
-	(dimensions)[1] = 900;
+	window_width = (offset * map_width + offset * map_length) * 1.4;
+	window_length = (offset * map_length + offset * map_width + mlx_win->highest * mlx_win->segment) * 1.2;
+	mlx_win->window_width = window_width;
+	mlx_win->window_length = window_length;
 }
+
+void	set_dimensions(t_mlx_win *mlx_win)
+{
+	size_t	offset;
+
+	mlx_win->segment = 30;
+	offset = (int)sqrt((((double)mlx_win->segment * (double)mlx_win->segment) / 2));
+	set_window_dimensions(mlx_win, offset);
+
+	if (mlx_win->window_length > 1200 || mlx_win->window_width > 1400)
+	{
+		if (mlx_win->window_length / 1200 > mlx_win->window_width / 1400)
+		{
+			mlx_win->segment = 30 * 1200 / mlx_win->window_length;
+			if (mlx_win->segment == 1)
+				mlx_win->segment = 2;
+			offset = (int)sqrt((((double)mlx_win->segment * (double)mlx_win->segment) / 2));
+			printf("and here segment is %zu\n", mlx_win->segment);
+			set_window_dimensions(mlx_win, offset);
+		}
+		else
+		{
+			mlx_win->segment = 30 * 1400 / mlx_win->window_width;
+			if (mlx_win->segment == 1)
+				mlx_win->segment = 2;
+			offset = (int)sqrt((((double)mlx_win->segment * (double)mlx_win->segment) / 2));
+			printf("hehe segment is %zu\n", mlx_win->segment);
+			set_window_dimensions(mlx_win, offset);
+		}
+	}
+	set_base_point(mlx_win, offset);
+}  
 
 void	tests(t_mlx_win *mlx_win)
 {
@@ -93,18 +169,14 @@ void	open_mlx(t_mlx_win *mlx_win, char *file)
 {
 	void	*mlx_ptr;
 	void	*window;
-	size_t	dimensions[2];
 
 	mlx_ptr = handle_null(mlx_init());
 
-	get_window_dimensions(dimensions, mlx_win);
-	window = handle_null(mlx_new_window(mlx_ptr, dimensions[0], \
-		dimensions[1], file));
+	set_dimensions(mlx_win);
+	window = handle_null(mlx_new_window(mlx_ptr, mlx_win->window_width, mlx_win->window_length, file));
+	//window = handle_null(mlx_new_window(mlx_ptr, 1400, 1000, file));
 	mlx_win->mlx_ptr = mlx_ptr;
 	mlx_win->window = window;
-	mlx_win->window_width = dimensions[0];
-	mlx_win->window_length = dimensions[1];
-	mlx_win->segment = 30;
 	draw_map(mlx_win);
 	//tests(mlx_win);
 	mlx_key_hook(window, handle_key, (void *)mlx_win);

@@ -12,44 +12,6 @@
 
 #include "fdf.h"
 
-void	set_base_point(t_mlx_win *mlx_win)
-{
-	t_coords	*base_point;
-
-	base_point = (t_coords *)malloc(sizeof(t_coords));
-	if (!base_point)
-		handle_error();
-	base_point->x = 50;
-	base_point->y = 700;
-	mlx_win->base_point = base_point;
-}
-
-void	set_offsets(t_mlx_win *mlx_win)
-{
-	size_t	length;
-
-	length = (int)sqrt((((double)mlx_win->segment * (double)mlx_win->segment) / 2));
-	if (mlx_win->projection == 0)
-	{
-		mlx_win->z_offset = mlx_win->segment; // 20?
-		//mlx_win->x_offset = 25; // 25?
-		//mlx_win->y_offset = 15; // 15?
-		mlx_win->x_offset = length + length / 4;
-		mlx_win->y_offset = length - length / 4;
-		mlx_win->x_y_offset = mlx_win->x_offset;
-		mlx_win->y_x_offset = mlx_win->y_offset;
-	}
-	else if (mlx_win->projection == 1)
-	{
-		mlx_win->z_offset = mlx_win->segment; // 20?
-		//mlx_win->x_offset = 20; // 25?
-		mlx_win->x_offset = length;
-		mlx_win->y_offset = mlx_win->x_offset; // 15?
-		mlx_win->x_y_offset = mlx_win->x_offset;
-		mlx_win->y_x_offset = mlx_win->y_offset;
-	}
-}
-
 size_t	get_x(t_mlx_win *mlx_win, size_t i, size_t j)
 {
 	size_t	x;
@@ -141,22 +103,28 @@ void	draw_grid(t_mlx_win *mlx_win)
 
 void	erase_map(t_mlx_win *mlx_win)
 {
-	int i;
-	int j;
+	size_t i;
+	size_t j;
 	int color;
-	color = 0x000000;
+	size_t	width;
+	size_t	length;
 
+	width = mlx_win->window_width;
+	length = mlx_win->window_length;
+	printf("width is %zu len is %zu\n", width, length);
+	color = 0x000000;
 	i = 0;
-	while (i < 900)
+	while (i < length)
 	{
 		j = 0;
-		while (j < 900)
+		while (j < width)
 		{
-			mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, i, j, color);
+			mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, j, i, color);
 			j++;
 		}
 		i++;
 	}
+	printf("j is %zu i is %zu\n", j, i);
 }
 
 void	draw_map(t_mlx_win *mlx_win)
@@ -164,8 +132,8 @@ void	draw_map(t_mlx_win *mlx_win)
 	size_t		x;
 	size_t		y;
 
+	
 	set_offsets(mlx_win);
-	set_base_point(mlx_win);
 	//draw_grid(mlx_win);
 	y = 0;
 	while (y < mlx_win->map_length)
