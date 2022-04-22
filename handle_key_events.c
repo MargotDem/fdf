@@ -25,11 +25,65 @@ int		handle_key(int key, void *param)
 	}
 	if (key == 123) // <
 	{
-		//printf("key is %d\n", key);
-		mlx_win->off_x_y -=20;
-		mlx_win->off_y_x +=20;
-		printf("off_x_y is %d and off_y_x is %d\n", mlx_win->off_x_y, mlx_win->off_y_x);
+		printf("segment is %zu\n", mlx_win->segment);
+		int max = mlx_win->segment;
+		static int plus_off_x_y = 0;
+		static int plus_off_y_x = 1;
+		static int plus_dist_x = 0;
+		if (plus_off_x_y)
+		{
+			mlx_win->off_x_y += 10;
+			if (mlx_win->off_x_y >= max)
+				plus_off_x_y = 0;
+		}
+		else
+		{
+			mlx_win->off_x_y -= 10;
+			if (mlx_win->off_x_y <= -max)
+				plus_off_x_y = 1;
+		}
+		if (plus_off_y_x)
+		{
+			mlx_win->off_y_x += 10;
+			if (mlx_win->off_y_x >= max)
+				plus_off_y_x = 0;
+		}
+		else
+		{
+			mlx_win->off_y_x -= 10;
+			if (mlx_win->off_y_x <= -max)
+				plus_off_y_x = 1;
+		}
 
+
+
+
+		int dist_x;
+		dist_x = mlx_win->point_e->x - mlx_win->point_a->x;
+		printf("off_x_y is %d and off_y_x is %d and idst is %d and max is %d\n", mlx_win->off_x_y, mlx_win->off_y_x, dist_x, max);
+		//int dist_x_d = mlx_win->point_e->x - mlx_win->point_d->x;
+
+		if (plus_dist_x)
+		{
+			dist_x += 10;
+			mlx_win->point_a->x -= 10;
+			//mlx_win->point_d->x -= 10;
+			mlx_win->point_a->y = mlx_win->point_e->y - (sqrt((max / 2) * (max / 2) - dist_x * dist_x));
+			//mlx_win->point_d->y = mlx_win->point_e->y - (sqrt((max / 2) * (max / 2) - dist_x_d * dist_x_d));
+			if (dist_x >= (max / 2))
+				plus_dist_x = 0;
+		}
+		else
+		{
+			dist_x -= 10;
+			mlx_win->point_a->x += 10;
+			//mlx_win->point_d->x += 10;
+			mlx_win->point_a->y = mlx_win->point_e->y - (sqrt((max / 2) * (max / 2) - dist_x * dist_x));
+			//mlx_win->point_d->y = mlx_win->point_e->y - (sqrt((max / 2) * (max / 2) - dist_x_d * dist_x_d));
+			if (dist_x <= -(max / 2))
+				plus_dist_x = 1;
+		}
+		
 
 		mlx_win->point_b->x = mlx_win->point_a->x + (mlx_win->off_x * 1) + (mlx_win->off_x_y * 0);
 		mlx_win->point_b->y = mlx_win->point_a->y - (mlx_win->off_y * 1) + (mlx_win->off_y_x * 0); // 0: j: len, et 1: i: width

@@ -52,6 +52,7 @@ typedef struct s_mlx_win {
 	t_coords	*point_b;
 	t_coords	*point_c;
 	t_coords	*point_d;
+	t_coords	*point_e;
 	int	off_x;
 	int	off_x_y;
 	int	off_y;
