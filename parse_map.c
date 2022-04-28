@@ -12,63 +12,7 @@
 
 #include "fdf.h"
 
-void	free_map(int **map, size_t size)
-{
-	size_t		j;
-
-	j = 0;
-	while (j < size)
-	{
-		free(map[j]);
-		j++;
-	}
-	free(map);
-}
-
-void	malloc_map(int ***map, size_t size_x, size_t size_y)
-{
-	size_t		i;
-	size_t		j;
-
-	j = 0;
-	*map = (int **)malloc(sizeof(int *) * size_y);
-	if (!(*map))
-		handle_error();
-	i = 0;
-	while (i < size_y)
-	{
-		(*map)[i] = (int *)malloc(sizeof(int) * size_x);
-		if (!((*map)[i]))
-		{
-			free_map(*map, i - 1);
-			handle_error();
-		}
-		i++;
-	}
-}
-
-void	print_map(int **map, size_t width, size_t length)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	while (i < length)
-	{
-		j = 0;
-		while (j < width)
-		{
-			printf("%d ", map[i][j]);
-			j++;
-		}
-		printf("\n");
-		i++;
-	}
-	printf("\n");
-}
-
-size_t	get_map_size_y(char *file)
+size_t	get_map_length(char *file)
 {
 	int		ret;
 	int		fd;
@@ -89,71 +33,92 @@ size_t	get_map_size_y(char *file)
 	return (map_size_y);
 }
 
-void	test(void)
+size_t	get_map_width(char *file)
 {
-	int	color;
-
-	color = 0xffffff;
-	//printf("color is %x\n", color >> 16 & 0xff);
-	printf("color is %x\n", color);
-	//printf("color is %x\n", color | 0x0000ff);
-	printf("color is %x\n", color & 0xff0000);
-	printf("color is %x\n", (color & 0xff0000) | 0x0000aa);
-	printf("color is %x\n", (color & 0xff0000) | 170);
-	printf("color is %x\n", (color & 0xff0000) | (170 << 8));
-	//printf("color is %x\n", color | (0x45 << 8));
-	//printf("color is %x\n", color | (0x45 << 16));
-}
-
-void	parse_map(char *file)
-{
+	size_t		map_width;
+	char		**data_ar;
+	char		*line;
 	int			ret;
 	int			fd;
-	size_t		i;
-	size_t		j;
-	size_t		map_width;
-	size_t		map_len;
-	char		*line;
-	char		**data_ar;
-	int			**map;
-	size_t		highest;
-	t_mlx_win	*mlx_win;
 
 	map_width = 0;
-	map_len = get_map_size_y(file);
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		handle_error();
 	ret = get_next_line(fd, &line);
-	j = 0;
-	highest = 0;
 	data_ar = ft_strsplit(line, ' ');
 	while (data_ar[map_width])
 		map_width++;
-	//free(data_ar);
-	malloc_map(&map, map_width, map_len);
+	ft_free_str_array(data_ar, map_width);
+	free(data_ar);
+	return (map_width);
+	close(fd);
+}
+
+void	parse_line(size_t *int_ar, int **map, int *highest, char **data_ar)
+{
+	size_t		i;
+
+	i = 0;
+	while (i < int_ar[1] && data_ar[i])
+	{
+		map[int_ar[0]][i] = ft_atoi(data_ar[i]);
+		if (ft_atoi(data_ar[i]) > *highest)
+			*highest = ft_atoi(data_ar[i]);
+		i++;
+	}
+	if (i < int_ar[1])
+		handle_error();
+}
+
+void	parse_lines(char *file, size_t map_width, int **map, int *highest)
+{
+	char		**data_ar;
+	size_t		line_width;
+	size_t		j;
+	int			ret;
+	int			fd;
+	char		*line;
+	size_t		int_ar[2];
+
+	j = 0;
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		handle_error();
+	ret = get_next_line(fd, &line);
 	while (ret)
 	{
-		i = 0;
 		data_ar = ft_strsplit(line, ' ');
-		while (i < map_width && data_ar[i])
-		{
-			map[j][i] = ft_atoi(data_ar[i]);
-			if (ft_atoi(data_ar[i]) > (int)highest)
-				highest = ft_atoi(data_ar[i]);
-			i++;
-		}
-		if (i < map_width)
-			handle_error();
+		line_width = 0;
+		while (data_ar[line_width])
+			line_width++;
+		int_ar[0] = j;
+		int_ar[1] = map_width;
+		parse_line(int_ar, map, highest, data_ar);
 		ret = get_next_line(fd, &line);
 		j++;
-		//free(data_ar);
+		ft_free_str_array(data_ar, line_width);
+		free(data_ar);
 	}
 	close(fd);
-	//print_map(map, map_width, map_len);
-	mlx_win = create_mlx_win_struct(map, map_width, map_len, highest);
+}
+
+void	parse_map(char *file)
+{
+	size_t		map_width;
+	size_t		map_length;
+	int			**map;
+	int			highest;
+	t_mlx_win	*mlx_win;
+
+	map_length = get_map_length(file);
+	map_width = get_map_width(file);
+	malloc_map(&map, map_width, map_length);
+	highest = 0;
+	parse_lines(file, map_width, map, &highest);
+	mlx_win = create_mlx_win_struct(map, map_width, map_length, highest);
 	open_mlx(mlx_win, file);
-	free_map(map, map_len);
+	free_map(map, map_length);
 	free(mlx_win->base_point);
 	free(mlx_win);
 }

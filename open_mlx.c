@@ -172,6 +172,50 @@ void	tests(t_mlx_win *mlx_win)
 	print_pixel(mlx_win, point_e);
 }
 
+void	draw_circle(t_mlx_win *mlx_win)
+{
+	t_coords *center;
+	t_coords *point;
+	int rayon;
+	int	prev_y;
+	int	next_y;
+
+
+	center = (t_coords *)malloc(sizeof(t_coords));
+	point = (t_coords *)malloc(sizeof(t_coords));
+	center->x = 500;
+	center->y = 500;
+	center->color = 0xFF0000;
+	print_pixel(mlx_win, center);
+	rayon = 130;
+	point->x = center->x - rayon;
+	point->y = center->y;
+	prev_y = point->y;
+	point->color = 0xFF0000;
+	
+	print_pixel(mlx_win, point);
+	while (point->x <= center->x + rayon)
+	{
+		point->y = center->y - sqrt((rayon * rayon) - ((center->x - point->x) * (center->x - point->x)));
+		//printf("y is %d\n", point->y);
+		//point->y = center->y;
+		print_pixel(mlx_win, point);
+		if (prev_y > point->y + 1 || prev_y < point->y - 1)
+		{
+			next_y  = point->y;
+			while (prev_y < next_y)
+			{
+				point->y = prev_y;
+				print_pixel(mlx_win, point);
+				prev_y ++;
+			}
+		}
+		prev_y = point->y;
+		point->x ++;
+	}
+
+}
+
 void	tests2(void)
 {
 	printf("holaaaa\n");
@@ -206,12 +250,13 @@ void	open_mlx(t_mlx_win *mlx_win, char *file)
 
 	mlx_ptr = handle_null(mlx_init());
 	set_dimensions(mlx_win);
-	//window = handle_null(mlx_new_window(mlx_ptr, mlx_win->window_width, mlx_win->window_length, file));
-	window = handle_null(mlx_new_window(mlx_ptr, 1000, 1200, file));
+	window = handle_null(mlx_new_window(mlx_ptr, mlx_win->window_width, mlx_win->window_length, file));
+	//window = handle_null(mlx_new_window(mlx_ptr, 1000, 1200, file));
 	mlx_win->mlx_ptr = mlx_ptr;
 	mlx_win->window = window;
-	//draw_map(mlx_win);
-	tests(mlx_win);
+	draw_map(mlx_win);
+	//tests(mlx_win);
+	//draw_circle(mlx_win);
 	//tests2();
 	mlx_key_hook(window, handle_key, (void *)mlx_win);
 	mlx_loop(mlx_ptr);

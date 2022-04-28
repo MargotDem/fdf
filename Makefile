@@ -13,7 +13,7 @@
 NAME =  fdf
 
 SRCS = fdf.c handle_error.c parse_map.c create_mlx_win_struct.c open_mlx.c \
-	handle_key_events.c draw_map.c draw_line.c helpers.c
+	handle_key_events.c draw_map.c draw_line.c helpers.c malloc_free_map.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -29,15 +29,24 @@ all: $(NAME)
 
 $(NAME):
 	make -C ./libft
-	cp ./libft/libft.a ./libft.a
 	gcc $(FLAGS) $(INCLUDES) -c $(SRCS)
-	gcc $(FLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -L./ -lft $(LIBS) $(FRAMEWORKS)
+	gcc $(FLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -L ./libft -lft $(LIBS) \
+		$(FRAMEWORKS)
 
 clean:
 	make -C ./libft clean
 	rm -f $(OBJS)
 
 fclean: clean
+	make -C ./libft fclean
 	rm -f $(NAME)
 
 re: fclean all
+
+dev:
+	rm -f $(NAME)
+	gcc $(FLAGS) $(INCLUDES) -c $(SRCS)
+	gcc $(FLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -L ./libft -lft $(LIBS) \
+		$(FRAMEWORKS)
+	make clean
+

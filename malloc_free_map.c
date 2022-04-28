@@ -1,30 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_mlx_win.c                                   :+:      :+:    :+:   */
+/*   malloc_free_map.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mde-maul <mde-maul@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/21 14:34:36 by mde-maul          #+#    #+#             */
-/*   Updated: 2022/04/21 14:34:44 by mde-maul         ###   ########.fr       */
+/*   Created: 2022/04/28 15:44:47 by mde-maul          #+#    #+#             */
+/*   Updated: 2022/04/28 15:44:50 by mde-maul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-t_mlx_win	*create_mlx_win_struct(int **map, size_t width, size_t length, \
-	int highest)
+void	free_map(int **map, size_t size)
 {
-	t_mlx_win	*mlx_win;
+	size_t		j;
 
-	mlx_win = (t_mlx_win *)malloc(sizeof(t_mlx_win));
-	if (!mlx_win)
+	j = 0;
+	while (j < size)
+	{
+		free(map[j]);
+		j++;
+	}
+	free(map);
+}
+
+void	malloc_map(int ***map, size_t size_x, size_t size_y)
+{
+	size_t		i;
+	size_t		j;
+
+	j = 0;
+	*map = (int **)malloc(sizeof(int *) * size_y);
+	if (!(*map))
 		handle_error();
-	mlx_win->map = map;
-	mlx_win->map_width = width;
-	mlx_win->map_length = length;
-	mlx_win->rotation_a = 20;
-	mlx_win->projection = 0;
-	mlx_win->highest = highest;
-	return (mlx_win);
+	i = 0;
+	while (i < size_y)
+	{
+		(*map)[i] = (int *)malloc(sizeof(int) * size_x);
+		if (!((*map)[i]))
+		{
+			free_map(*map, i - 1);
+			handle_error();
+		}
+		i++;
+	}
 }

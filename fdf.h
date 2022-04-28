@@ -14,7 +14,7 @@
 # define FDF_H
 
 # include "libft/libft.h"
-# include "minilibx/mlx.h"
+# include "mlx.h"
 # include <stdarg.h>
 # include <stdlib.h>
 # include <fcntl.h>
@@ -39,7 +39,7 @@ typedef struct s_mlx_win {
 	size_t		window_length;
 	t_coords	*base_point;
 	int			rotation_a;
-	size_t		highest;
+	int			highest;
 	size_t		z_offset;
 	size_t		x_offset;
 	size_t		y_offset;
@@ -64,7 +64,7 @@ void		handle_error(void);
 void		*handle_null(void *param);
 void		parse_map(char *file);
 t_mlx_win	*create_mlx_win_struct(int **map, size_t width, \
-	size_t length, size_t highest);
+	size_t length, int highest);
 void		open_mlx(t_mlx_win *mlx_win, char *file);
 int			handle_key(int key, void *param);
 void		draw_map(t_mlx_win *mlx_win);
@@ -74,5 +74,7 @@ int			round_point(float x);
 void		print_pixel(t_mlx_win *mlx_win, t_coords *point_a);
 void		erase_map(t_mlx_win *mlx_win);
 void		set_offsets(t_mlx_win *mlx_win);
+void		free_map(int **map, size_t size);
+void		malloc_map(int ***map, size_t size_x, size_t size_y);
 
 #endif
