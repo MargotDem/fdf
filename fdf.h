@@ -76,5 +76,7 @@ void		erase_map(t_mlx_win *mlx_win);
 void		set_offsets(t_mlx_win *mlx_win);
 void		free_map(int **map, size_t size);
 void		malloc_map(int ***map, size_t size_x, size_t size_y);
+size_t		get_map_length(char *file);
+size_t		get_map_width(char *file);
 
 #endif

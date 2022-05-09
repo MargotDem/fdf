@@ -12,49 +12,6 @@
 
 #include "fdf.h"
 
-size_t	get_map_length(char *file)
-{
-	int		ret;
-	int		fd;
-	char	*line;
-	size_t	map_size_y;
-
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		handle_error();
-	ret = get_next_line(fd, &line);
-	map_size_y = 0;
-	while (ret)
-	{
-		map_size_y++;
-		ret = get_next_line(fd, &line);
-	}
-	close(fd);
-	return (map_size_y);
-}
-
-size_t	get_map_width(char *file)
-{
-	size_t		map_width;
-	char		**data_ar;
-	char		*line;
-	int			ret;
-	int			fd;
-
-	map_width = 0;
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		handle_error();
-	ret = get_next_line(fd, &line);
-	data_ar = ft_strsplit(line, ' ');
-	while (data_ar[map_width])
-		map_width++;
-	ft_free_str_array(data_ar, map_width);
-	free(data_ar);
-	return (map_width);
-	close(fd);
-}
-
 void	parse_line(size_t *int_ar, int **map, int *highest, char **data_ar)
 {
 	size_t		i;
@@ -76,7 +33,6 @@ void	parse_lines(char *file, size_t map_width, int **map, int *highest)
 	char		**data_ar;
 	size_t		line_width;
 	size_t		j;
-	int			ret;
 	int			fd;
 	char		*line;
 	size_t		int_ar[2];
@@ -85,8 +41,7 @@ void	parse_lines(char *file, size_t map_width, int **map, int *highest)
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		handle_error();
-	ret = get_next_line(fd, &line);
-	while (ret)
+	while (get_next_line(fd, &line))
 	{
 		data_ar = ft_strsplit(line, ' ');
 		line_width = 0;
@@ -95,10 +50,10 @@ void	parse_lines(char *file, size_t map_width, int **map, int *highest)
 		int_ar[0] = j;
 		int_ar[1] = map_width;
 		parse_line(int_ar, map, highest, data_ar);
-		ret = get_next_line(fd, &line);
 		j++;
 		ft_free_str_array(data_ar, line_width);
 		free(data_ar);
+		free(line);
 	}
 	close(fd);
 }

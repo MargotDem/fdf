@@ -13,7 +13,8 @@
 NAME =  fdf
 
 SRCS = fdf.c handle_error.c parse_map.c create_mlx_win_struct.c open_mlx.c \
-	handle_key_events.c draw_map.c draw_line.c helpers.c malloc_free_map.c
+	handle_key_events.c draw_map.c draw_line.c helpers.c malloc_free_map.c \
+	get_map_size.c
 
 OBJS = $(SRCS:.c=.o)
 

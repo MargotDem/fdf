@@ -28,9 +28,7 @@ void	free_map(int **map, size_t size)
 void	malloc_map(int ***map, size_t size_x, size_t size_y)
 {
 	size_t		i;
-	size_t		j;
 
-	j = 0;
 	*map = (int **)malloc(sizeof(int *) * size_y);
 	if (!(*map))
 		handle_error();
@@ -38,7 +36,7 @@ void	malloc_map(int ***map, size_t size_x, size_t size_y)
 	while (i < size_y)
 	{
 		(*map)[i] = (int *)malloc(sizeof(int) * size_x);
-		if (!((*map)[i]))
+		if (i && !((*map)[i]))
 		{
 			free_map(*map, i - 1);
 			handle_error();
