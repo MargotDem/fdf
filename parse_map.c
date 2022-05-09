@@ -32,12 +32,12 @@ void	parse_lines(char *file, size_t map_width, int **map, int *highest)
 {
 	char		**data_ar;
 	size_t		line_width;
-	size_t		j;
 	int			fd;
 	char		*line;
 	size_t		int_ar[2];
 
-	j = 0;
+	int_ar[0] = 0;
+	int_ar[1] = map_width;
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		handle_error();
@@ -47,10 +47,8 @@ void	parse_lines(char *file, size_t map_width, int **map, int *highest)
 		line_width = 0;
 		while (data_ar[line_width])
 			line_width++;
-		int_ar[0] = j;
-		int_ar[1] = map_width;
 		parse_line(int_ar, map, highest, data_ar);
-		j++;
+		int_ar[0]++;
 		ft_free_str_array(data_ar, line_width);
 		free(data_ar);
 		free(line);

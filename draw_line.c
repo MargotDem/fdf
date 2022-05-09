@@ -18,16 +18,14 @@ void		pick_color_point(size_t highest, t_coords *point)
 	int	color;
 	int	gb_value;
 
-	color = 0xffffff; // white
+	color = 0xffffff;
 	if (highest != 0)
 	{
-		//ff4242
 		diff = point->floor - point->y;
 		gb_value = (diff * 255) / highest;
 		color = (color & 0xff0000) | gb_value | gb_value << 8;
 	}
 	point->color = color;
-	//point->color = 0xff0000;
 }
 
 int		pick_color_gradient(int y, t_coords *point_a, t_coords *point_b)
@@ -81,7 +79,7 @@ void	draw_line(t_mlx_win *mlx_win, t_coords *point_a, t_coords *point_b)
 		{
 			while (y < point_b->y)
 			{
-				x = round_point(point_a->x + (y - 0.5 - point_a->y) * (  (float)(point_b->x - point_a->x) / (float)(point_b->y - point_a->y)    ));
+				x = round_point(point_a->x + (y - 0.5 - point_a->y) * ((float)(point_b->x - point_a->x) / (float)(point_b->y - point_a->y)));
 				color = pick_color_gradient(y, point_a, point_b);
 				mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, color);
 				y++;
@@ -91,9 +89,8 @@ void	draw_line(t_mlx_win *mlx_win, t_coords *point_a, t_coords *point_b)
 		{
 			while (y > point_b->y)
 			{
-				x = round_point(point_a->x + (y - 0.5 - point_a->y) * (  (float)(point_b->x - point_a->x) / (float)(point_b->y - point_a->y)    ));
+				x = round_point(point_a->x + (y - 0.5 - point_a->y) * ((float)(point_b->x - point_a->x) / (float)(point_b->y - point_a->y)));
 				color = pick_color_gradient(y, point_b, point_a);
-				//color = 0x00d443;
 				mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, color);
 				y--;
 			}

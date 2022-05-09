@@ -131,10 +131,8 @@ void	draw_map(t_mlx_win *mlx_win)
 {
 	size_t		x;
 	size_t		y;
-
 	
 	set_offsets(mlx_win);
-	//draw_grid(mlx_win);
 	y = 0;
 	while (y < mlx_win->map_length)
 	{

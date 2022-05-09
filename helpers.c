@@ -19,8 +19,8 @@ int		round_point(float x)
 	return ((int)x);
 }
 
-void	print_pixel(t_mlx_win *mlx_win, t_coords *point_a)
+void	print_pixel(t_mlx_win *mlx_win, t_coords *point)
 {
-	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point_a->x, point_a->y, \
-		point_a->color);
+	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point->x, point->y, \
+		point->color);
 }
