@@ -15,6 +15,7 @@
 size_t	get_map_length(char *file)
 {
 	int		fd;
+	int		ret;
 	char	*line;
 	size_t	map_size_y;
 
@@ -22,10 +23,14 @@ size_t	get_map_length(char *file)
 	if (fd < 0)
 		handle_error();
 	map_size_y = 0;
-	while (get_next_line(fd, &line))
+	ret = get_next_line(fd, &line);
+	if (ret < 0)
+		handle_error();
+	while (ret)
 	{
 		map_size_y++;
 		free(line);
+		ret = get_next_line(fd, &line);
 	}
 	close(fd);
 	return (map_size_y);
@@ -44,6 +49,8 @@ size_t	get_map_width(char *file)
 		handle_error();
 	get_next_line(fd, &line);
 	data_ar = ft_strsplit(line, ' ');
+	if (!data_ar)
+		handle_error();
 	while (data_ar[map_width])
 		map_width++;
 	ft_free_str_array(data_ar, map_width);

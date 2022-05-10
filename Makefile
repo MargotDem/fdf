@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME =  fdf
+NAME = fdf
 
 SRCS = fdf.c handle_error.c parse_map.c create_mlx_win_struct.c open_mlx.c \
 	handle_key_events.c draw_map.c draw_line.c helpers.c malloc_free_map.c \
@@ -45,11 +45,9 @@ fclean: clean
 re: fclean all
 
 dev:
+	make -C ./libft
 	rm -f $(NAME)
-	gcc $(FLAGS) $(INCLUDES) -c $(SRCS) -g
+	gcc $(FLAGS) $(INCLUDES) -c $(SRCS)
 	gcc $(FLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -L ./libft -lft $(LIBS) \
 		$(FRAMEWORKS)
 	make clean
-
-test:
-	gcc $(FLAGS) $(INCLUDES) $(SRCS) -g -o $(NAME) -L ./libft -lft $(LIBS) $(FRAMEWORKS)

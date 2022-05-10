@@ -53,6 +53,11 @@ void	make_line(t_mlx_win *mlx_win, size_t j, size_t i)
 	point_a->x = x;
 	point_a->y = y;
 	point_a->floor = floor;
+	if (mlx_win->map_width == 1 && mlx_win->map_length == 1)
+	{
+		point_a->color = 0xffffff;
+		print_pixel(mlx_win, point_a);
+	}
 	make_line2(mlx_win, j, i, point_a);
 }
 
