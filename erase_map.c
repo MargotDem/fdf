@@ -1,26 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   erase_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mde-maul <mde-maul@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/21 14:54:34 by mde-maul          #+#    #+#             */
-/*   Updated: 2022/04/21 14:54:36 by mde-maul         ###   ########.fr       */
+/*   Created: 2022/05/10 11:48:13 by mde-maul          #+#    #+#             */
+/*   Updated: 2022/05/10 11:48:17 by mde-maul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	round_point(float x)
+void	erase_map(t_mlx_win *mlx_win)
 {
-	if ((int)(x * 10) % 10 >= 5)
-		return ((int)x + 1);
-	return ((int)x);
-}
+	size_t	i;
+	size_t	j;
+	int		color;
+	size_t	width;
+	size_t	length;
 
-void	print_pixel(t_mlx_win *mlx_win, t_coords *point)
-{
-	mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, point->x, point->y, \
-		point->color);
+	width = mlx_win->window_width;
+	length = mlx_win->window_length;
+	color = 0x000000;
+	i = 0;
+	while (i < length)
+	{
+		j = 0;
+		while (j < width)
+		{
+			mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, j, i, color);
+			j++;
+		}
+		i++;
+	}
 }

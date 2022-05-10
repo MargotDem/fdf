@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-void		pick_color_point(size_t highest, t_coords *point)
+void	pick_color_point(size_t highest, t_coords *point)
 {
 	int	diff;
 	int	color;
@@ -28,9 +28,9 @@ void		pick_color_point(size_t highest, t_coords *point)
 	point->color = color;
 }
 
-int		pick_color_gradient(int y, t_coords *point_a, t_coords *point_b)
+int	pick_color_gradient(int y, t_coords *point_a, t_coords *point_b)
 {
-	int color;
+	int	color;
 	int	diff_y;
 	int	diff_color;
 	int	gb_value;
@@ -52,6 +52,35 @@ int		pick_color_gradient(int y, t_coords *point_a, t_coords *point_b)
 	return (color);
 }
 
+void	draw_steep_line(t_mlx_win *mlx_win, t_coords *point_a, \
+	t_coords *point_b)
+{
+	int			x;
+	int			y;
+	t_coords	*tmp;
+	int			color;
+
+	x = point_a->x;
+	y = point_a->y;
+	if (point_b-> y <= point_a->y)
+	{
+		x = point_b->x;
+		y = point_b->y;
+		tmp = point_a;
+		point_a = point_b;
+		point_b = tmp;
+	}
+	while (y < point_b->y)
+	{
+		x = round_point(point_a->x + (y - 0.5 - point_a->y) * \
+			((float)(point_b->x - point_a->x) / \
+			(float)(point_b->y - point_a->y)));
+		color = pick_color_gradient(y, point_a, point_b);
+		mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, color);
+		y++;
+	}
+}
+
 void	draw_line(t_mlx_win *mlx_win, t_coords *point_a, t_coords *point_b)
 {
 	int	x;
@@ -67,34 +96,15 @@ void	draw_line(t_mlx_win *mlx_win, t_coords *point_a, t_coords *point_b)
 	{
 		while (x < point_b->x)
 		{
-			y = round_point(((float)(point_b->y - point_a->y) / (float)(point_b->x - point_a->x)) * (x - point_a->x) + point_a->y + 0.5);
+			y = round_point(((float)(point_b->y - point_a->y) / \
+				(float)(point_b->x - point_a->x)) * (x - point_a->x) + \
+				point_a->y + 0.5);
 			color = pick_color_gradient(y, point_a, point_b);
 			mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, color);
 			x++;
 		}
 	}
 	else
-	{
-		if (point_b-> y > point_a->y)
-		{
-			while (y < point_b->y)
-			{
-				x = round_point(point_a->x + (y - 0.5 - point_a->y) * ((float)(point_b->x - point_a->x) / (float)(point_b->y - point_a->y)));
-				color = pick_color_gradient(y, point_a, point_b);
-				mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, color);
-				y++;
-			}
-		}
-		else
-		{
-			while (y > point_b->y)
-			{
-				x = round_point(point_a->x + (y - 0.5 - point_a->y) * ((float)(point_b->x - point_a->x) / (float)(point_b->y - point_a->y)));
-				color = pick_color_gradient(y, point_b, point_a);
-				mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, x, y, color);
-				y--;
-			}
-		}
-	}
+		draw_steep_line(mlx_win, point_a, point_b);
 	print_pixel(mlx_win, point_b);
 }

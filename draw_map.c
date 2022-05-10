@@ -12,54 +12,13 @@
 
 #include "fdf.h"
 
-size_t	get_x(t_mlx_win *mlx_win, size_t i, size_t j)
+void	make_line2(t_mlx_win *mlx_win, size_t j, size_t i, t_coords *point_a)
 {
-	size_t	x;
-
-	x = (mlx_win->base_point->x + (mlx_win->x_offset * i)) + (mlx_win->x_y_offset * j);
-	return (x);
-}
-
-size_t	get_y_floor(t_mlx_win *mlx_win, size_t i, size_t j)
-{
-	size_t	y;
-
-	// (mlx_win->y_offset * i) actually another offset. == yoffset if symmetric losange ie if xoffset == yoffset
-	y = mlx_win->base_point->y - (mlx_win->y_offset * i) + (mlx_win->y_x_offset * j);
-	return (y);
-}
-
-
-size_t	get_y(t_mlx_win *mlx_win, size_t i, size_t j)
-{
-	size_t	y;
-
-	y = get_y_floor(mlx_win, i, j) - (mlx_win->map[j][i] * mlx_win->z_offset);
-	return (y);
-}
-
-
-void	make_line(t_mlx_win *mlx_win, size_t j, size_t i)
-{
-	size_t 		x;
-	size_t 		y;
-	size_t 		floor;
-	t_coords	*point_a;
 	t_coords	*point_b;
 
-	mlx_win->base_point->y = mlx_win->base_point->y;
-	x = get_x(mlx_win, i, j);
-	y = get_y(mlx_win, i, j);
-	floor = get_y_floor(mlx_win, i, j);
-	point_a = (t_coords *)malloc(sizeof(t_coords));
-	if (!point_a)
-		handle_error();
 	point_b = (t_coords *)malloc(sizeof(t_coords));
 	if (!point_b)
 		handle_error();
-	point_a->x = x;
-	point_a->y = y;
-	point_a->floor = floor;
 	if (i != mlx_win->map_width - 1)
 	{
 		point_b->x = get_x(mlx_win, i + 1, j);
@@ -76,62 +35,32 @@ void	make_line(t_mlx_win *mlx_win, size_t j, size_t i)
 	}
 	free(point_a);
 	free(point_b);
-
 }
 
-
-void	draw_grid(t_mlx_win *mlx_win)
+void	make_line(t_mlx_win *mlx_win, size_t j, size_t i)
 {
-	int i;
-	int j;
-	int color;
-	color = 0xe0e0e0;
+	size_t		x;
+	size_t		y;
+	size_t		floor;
+	t_coords	*point_a;
 
-	i = 0;
-	while (i < 600)
-	{
-		j = 0;
-		while (j < 600)
-		{
-			if ((i % 20 == 0) || (j % 20 == 0))
-				mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, i, j, color);
-			j++;
-		}
-		i++;
-	}
-}
-
-void	erase_map(t_mlx_win *mlx_win)
-{
-	size_t i;
-	size_t j;
-	int color;
-	size_t	width;
-	size_t	length;
-
-	width = mlx_win->window_width;
-	length = mlx_win->window_length;
-	printf("width is %zu len is %zu\n", width, length);
-	color = 0x000000;
-	i = 0;
-	while (i < length)
-	{
-		j = 0;
-		while (j < width)
-		{
-			mlx_pixel_put(mlx_win->mlx_ptr, mlx_win->window, j, i, color);
-			j++;
-		}
-		i++;
-	}
-	printf("j is %zu i is %zu\n", j, i);
+	x = get_x(mlx_win, i, j);
+	y = get_y(mlx_win, i, j);
+	floor = get_y_floor(mlx_win, i, j);
+	point_a = (t_coords *)malloc(sizeof(t_coords));
+	if (!point_a)
+		handle_error();
+	point_a->x = x;
+	point_a->y = y;
+	point_a->floor = floor;
+	make_line2(mlx_win, j, i, point_a);
 }
 
 void	draw_map(t_mlx_win *mlx_win)
 {
 	size_t		x;
 	size_t		y;
-	
+
 	set_offsets(mlx_win);
 	y = 0;
 	while (y < mlx_win->map_length)

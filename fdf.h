@@ -45,16 +45,6 @@ typedef struct s_mlx_win {
 	size_t		x_y_offset;
 	size_t		y_x_offset;
 	size_t		projection;
-
-	t_coords	*point_a;
-	t_coords	*point_b;
-	t_coords	*point_c;
-	t_coords	*point_d;
-	t_coords	*point_e;
-	int	off_x;
-	int	off_x_y;
-	int	off_y;
-	int	off_y_x;
 }	t_mlx_win;
 
 void		print_usage(void);
@@ -76,5 +66,9 @@ void		free_map(int **map, size_t size);
 void		malloc_map(int ***map, size_t size_x, size_t size_y);
 size_t		get_map_length(char *file);
 size_t		get_map_width(char *file);
+void		erase_map(t_mlx_win *mlx_win);
+size_t		get_y(t_mlx_win *mlx_win, size_t i, size_t j);
+size_t		get_x(t_mlx_win *mlx_win, size_t i, size_t j);
+size_t		get_y_floor(t_mlx_win *mlx_win, size_t i, size_t j);
 
 #endif
