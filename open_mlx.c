@@ -63,7 +63,6 @@ void	set_window_dimensions(t_mlx_win *mlx_win, size_t offset)
 		mlx_win->highest * mlx_win->z_offset) * 1.2;
 	mlx_win->window_width = window_width;
 	mlx_win->window_length = window_length;
-	printf("heree 1\n");
 }
 
 void	set_dimensions(t_mlx_win *mlx_win)
@@ -71,34 +70,26 @@ void	set_dimensions(t_mlx_win *mlx_win)
 	size_t	offset;
 
 	mlx_win->z_offset = 30;
-	printf("highest %d\n", mlx_win->highest);
 	offset = (int)sqrt((((double)mlx_win->z_offset * \
 		(double)mlx_win->z_offset) / 2));
-	if (mlx_win->highest * mlx_win->z_offset + offset * mlx_win->map_width + offset * mlx_win->map_length > 1200)
-	{
-		mlx_win->z_offset = 30 * 1200 / mlx_win->highest * mlx_win->z_offset + offset * mlx_win->map_width + offset * mlx_win->map_length;
-		offset = (int)sqrt((((double)mlx_win->z_offset * \
-		(double)mlx_win->z_offset) / 2));
-		printf("mlx_win->z_offset %zu\n", mlx_win->z_offset);
-		//handle_error();
-	}
 	set_window_dimensions(mlx_win, offset);
-		printf("heree 3 %zu %zu\n", mlx_win->window_length, mlx_win->window_width);
 	if (mlx_win->window_length > 1200 || mlx_win->window_width > 1400)
 	{
 		if (mlx_win->window_length / 1200 > mlx_win->window_width / 1400)
 			mlx_win->z_offset = 30 * 1200 / mlx_win->window_length;
 		else
 			mlx_win->z_offset = 30 * 1400 / mlx_win->window_width;
-		if (mlx_win->z_offset == 1)
+		if (mlx_win->z_offset == 1 || mlx_win->z_offset == 0)
 			mlx_win->z_offset = 2;
+		if (mlx_win->highest > 300)
+		{
+			mlx_win->highest = 100;
+			mlx_win->z_offset = 10;
+		}
 		offset = (int)sqrt((((double)mlx_win->z_offset * \
 			(double)mlx_win->z_offset) / 2));
-		printf("heree 4 %zu %zu   new offset \n", mlx_win->window_length, mlx_win->window_width, );
 		set_window_dimensions(mlx_win, offset);
-		printf("heree 5 %zu %zu\n", mlx_win->window_length, mlx_win->window_width);
 	}
-	printf("heree 2\n");
 	set_base_point(mlx_win, offset);
 }
 

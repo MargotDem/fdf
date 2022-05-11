@@ -22,7 +22,6 @@
 void	escape(t_mlx_win *mlx_win)
 {
 	mlx_destroy_window(mlx_win->mlx_ptr, mlx_win->window);
-	system("leaks fdf");
 	exit(0);
 }
 

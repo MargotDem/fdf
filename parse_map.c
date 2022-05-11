@@ -66,7 +66,6 @@ void	parse_map(char *file)
 
 	map_length = get_map_length(file);
 	map_width = get_map_width(file);
-	printf("heeeyyy;jlkhkgc %zu, %zu\n", map_length, map_width);
 	if (map_width == 0)
 		handle_error();
 	malloc_map(&map, map_width, map_length);
